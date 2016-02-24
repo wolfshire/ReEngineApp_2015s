@@ -25,14 +25,14 @@ void AppClass::InitVariables(void)
 	//m_pMeshMngr->LoadModel("tests\\Cubev.fbx", "Unikitty");
 	int nCubes = 10;
 	vector3 v3Start(-nCubes/2.0f, 0.0f, -nCubes / 2.0f);
-	m_pMeshMngr->LoadModel("Minecraft\\Cube.bto", "Cube");
+	m_pMeshMngr->LoadModel("Cube.obj", "ElCubo");
 	m_pMeshMngr->SetShaderProgramByName("ElCubo", "Phong");
 	for (uint n = 0; n < nCubes; n++)
 	{
 		if (v3Start != vector3(0.0f))
 		{
 			String sName = "Cube_" + std::to_string(n);
-			m_pMeshMngr->LoadModel("Minecraft\\Cube.bto", sName, false, glm::translate(v3Start));
+			m_pMeshMngr->LoadModel("Cube.obj", sName, false, glm::translate(v3Start));
 			m_pMeshMngr->SetShaderProgramByName(sName, "Phong");
 		}
 		v3Start += vector3(1.0f, 0.0f, 1.0f);

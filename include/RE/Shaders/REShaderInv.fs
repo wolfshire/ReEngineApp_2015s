@@ -13,6 +13,7 @@ uniform vec3 Tint;
 uniform vec3 LightColor;
 uniform float LightPower;
 
+uniform vec3 CameraPosition;
 
 in vec3 Normal_W;
 in vec3 Tangent_W;

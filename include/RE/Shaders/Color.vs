@@ -1,6 +1,6 @@
 #version 330
 
-in vec3 Position_b;
+layout (location = 0) in vec3 Position_b;
 
 uniform mat4 MVP;
 uniform int nElements;

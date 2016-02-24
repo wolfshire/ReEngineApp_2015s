@@ -11,11 +11,12 @@ uniform float AmbientPower;
 uniform vec3 LightColor;
 uniform float LightPower;
 
+uniform vec3 CameraPosition;
 
+in vec3 Position_W;
 in vec3 Normal_W;
 in vec3 Tangent_W;
 in vec3 Binormal_W;
-in vec3 Position_W;
 in vec3 Eye_W;
 in vec2 UV;
 in vec3 Color;

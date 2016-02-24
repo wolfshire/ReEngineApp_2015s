@@ -352,24 +352,6 @@ public:
 	OUTPUT: ---
 	*/
 	virtual void SetName(String a_sName);
-	/*
-	USAGE: renders the object in wireframe mode
-	ARGUMENTS:
-		matrix4 a_mViewProjection -> View * Projection matrix
-		matrix4 a_mToWorld -> to world matrix
-		vector3 a_v3Color -> Color to render
-	OUTPUT: ---
-	*/
-	virtual void RenderWire(matrix4 a_mViewProjection, matrix4 a_mToWorld, vector3 a_v3Color);
-	/*
-	USAGE: renders the object in solid mode
-	ARGUMENTS:
-		matrix4 a_mViewProjection -> View * Projection matrix
-		matrix4 a_mToWorld -> to world matrix
-		vector3 a_v3Color -> Color to render
-	OUTPUT: ---
-	*/
-	virtual void RenderSolid(matrix4 a_mViewProjection, matrix4 a_mToWorld, vector3 a_v3Color);
 
 	/*
 	USAGE: returns the VAO of the mesh
@@ -426,6 +408,26 @@ public:
 	OUTPUT: ---
 	*/
 	void CalculateTangents(void);
+
+	/*
+	USAGE: renders the object in wireframe mode
+	ARGUMENTS:
+	matrix4 a_mViewProjection -> View * Projection matrix
+	matrix4 a_mToWorld -> to world matrix
+	vector3 a_v3Color -> Color to render
+	OUTPUT: ---
+	*/
+	virtual void Render(matrix4 a_mProjection, matrix4 a_mView, matrix4 a_mWorld);
+
+	/*
+	USAGE: renders the object in wireframe mode
+	ARGUMENTS:
+	matrix4 a_mViewProjection -> View * Projection matrix
+	matrix4 a_mToWorld -> to world matrix
+	vector3 a_v3Color -> Color to render
+	OUTPUT: ---
+	*/
+	virtual void RenderList(matrix4 a_mProjectionMatrix, matrix4 a_mViewMatrix, float* a_fMatrixArray, int a_nInstances);
 };
 
 EXPIMP_TEMPLATE template class ReEngDLL std::vector<MeshClass>;

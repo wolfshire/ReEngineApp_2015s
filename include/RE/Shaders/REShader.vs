@@ -1,16 +1,16 @@
 #version 330
-in vec3 Position_b;
-in vec3 UV_b;
-in vec3 Normal_b;
-in vec3 Binormal_b;
-in vec3 Tangent_b;
-in vec3 Color_b;
+layout (location = 0) in vec3 Position_b;
+layout (location = 1) in vec3 Color_b;
+layout (location = 2) in vec3 UV_b;
+layout (location = 3) in vec3 Normal_b;
+layout (location = 4) in vec3 Binormal_b;
+layout (location = 5) in vec3 Tangent_b;
 
 uniform mat4 MVP;
-uniform mat4 m4ModelToWorld;
-uniform vec3 CameraPosition;
 uniform int nElements;
 uniform mat4 m4ToWorld[250];
+
+uniform mat4 m4ModelToWorld;
 
 out vec3 Normal_W;
 out vec3 Tangent_W;
@@ -35,5 +35,4 @@ void main()
 	Normal_W =		(m4ModelToWorld * vec4(Normal_b,0)).xyz;
 	Tangent_W =		(m4ModelToWorld * vec4(Tangent_b, 0.0)).xyz;
 	Binormal_W =	(m4ModelToWorld * vec4(Binormal_b, 0.0)).xyz;
-	Eye_W = CameraPosition;
 }
