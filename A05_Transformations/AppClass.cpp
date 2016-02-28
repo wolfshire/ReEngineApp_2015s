@@ -49,11 +49,15 @@ void AppClass::Update(void)
 #pragma endregion
 
 #pragma region YOUR CODE GOES HERE
+	float angleE = m_fEarthTimer / 180 * PI;
+	float angleM = m_fMoonTimer / 180 * PI;
 	//Calculate the position of the Earth
-	m_m4Earth = glm::rotate(IDENTITY_M4, m_fEarthTimer, vector3(0.0f, 1.0f, 0.0f));
+	m_m4Earth = glm::rotate(IDENTITY_M4, m_fEarthTimer, vector3(0.0f, 0.0f, 0.0f));
+	m_m4Earth = glm::translate(IDENTITY_M4, vector3(cos(angleE) * 12, 0, -sin(angleE) * 12));
 
 	//Calculate the position of the Moon
 	m_m4Moon = glm::rotate(IDENTITY_M4, m_fMoonTimer, vector3(0.0f, 1.0f, 0.0f));
+	m_m4Moon = glm::translate(m_m4Earth, vector3(cos(angleM) * 2, 0, sin(angleM) * 2));
 #pragma endregion
 
 #pragma region Print info

@@ -1,4 +1,5 @@
 #include "MyPrimitive.h"
+#include <cmath>
 MyPrimitive::MyPrimitive() { }
 MyPrimitive::MyPrimitive(const MyPrimitive& other) { }
 MyPrimitive& MyPrimitive::operator=(const MyPrimitive& other) { return *this; }
@@ -110,16 +111,34 @@ void MyPrimitive::GenerateCone(float a_fRadius, float a_fHeight, int a_nSubdivis
 	Init();
 
 	//Your code starts here
-	float fValue = 0.5f;
-	//3--2
-	//|  |
-	//0--1
-	vector3 point0(-fValue, -fValue, fValue); //0
-	vector3 point1(fValue, -fValue, fValue); //1
-	vector3 point2(fValue, fValue, fValue); //2
-	vector3 point3(-fValue, fValue, fValue); //3
+	vector3 top(0.0f, a_fHeight / 2, 0.0f);
+	vector3 bottom(0.0f, -a_fHeight / 2, 0.0f);
+	vector3* points = new vector3[a_nSubdivisions];
+	
+	//setting up points
+	for (int i = 0; i < a_nSubdivisions; i++) {
+		float angle = 360.0f / a_nSubdivisions * i;
+		angle = (angle / 360) * 2 * PI;
+		float x = cos(angle);
+		float z = sin(angle);
+		points[i] = vector3(x * a_fRadius, -a_fHeight / 2, z * a_fRadius);
+	}
 
-	AddQuad(point0, point1, point3, point2);
+	//add vertices to mesh
+	for (int k = 0; k < a_nSubdivisions; k++) {
+		//side
+		AddVertexPosition(top);
+		AddVertexPosition(points[(k + 1) % a_nSubdivisions]);
+		AddVertexPosition(points[k]);
+
+		//bottom
+		AddVertexPosition(bottom);
+		AddVertexPosition(points[k]);
+		AddVertexPosition(points[(k + 1) % a_nSubdivisions]);
+	}
+
+	//deallocate
+	delete[] points;
 
 	//Your code ends here
 	CompileObject(a_v3Color);
@@ -135,16 +154,38 @@ void MyPrimitive::GenerateCylinder(float a_fRadius, float a_fHeight, int a_nSubd
 	Init();
 
 	//Your code starts here
-	float fValue = 0.5f;
-	//3--2
-	//|  |
-	//0--1
-	vector3 point0(-fValue, -fValue, fValue); //0
-	vector3 point1(fValue, -fValue, fValue); //1
-	vector3 point2(fValue, fValue, fValue); //2
-	vector3 point3(-fValue, fValue, fValue); //3
+	vector3 top(0.0f, a_fHeight / 2, 0.0f);
+	vector3 bottom(0.0f, -a_fHeight / 2, 0.0f);
+	vector3* upper = new vector3[a_nSubdivisions];
+	vector3* lower = new vector3[a_nSubdivisions];
 
-	AddQuad(point0, point1, point3, point2);
+	//setting upper and lower points
+	for (int i = 0; i < a_nSubdivisions; i++) {
+		float angle = 360.0f / a_nSubdivisions * i;
+		angle = (angle / 360) * 2 * PI;
+		float x = cos(angle);
+		float z = sin(angle);
+		upper[i] = vector3(x * a_fRadius, a_fHeight / 2, z * a_fRadius);
+		lower[i] = vector3(x * a_fRadius, -a_fHeight / 2, z * a_fRadius);
+	}
+
+	//add vertices to mesh
+	for (int k = 0; k < a_nSubdivisions; k++) {
+		//top
+		AddVertexPosition(top);
+		AddVertexPosition(upper[(k + 1) % a_nSubdivisions]);
+		AddVertexPosition(upper[k]);
+		//bottom
+		AddVertexPosition(bottom);
+		AddVertexPosition(lower[k]);
+		AddVertexPosition(lower[(k + 1) % a_nSubdivisions]);
+		//side quads
+		AddQuad(upper[k], upper[(k + 1) % a_nSubdivisions], lower[k], lower[(k + 1) % a_nSubdivisions]);
+	}
+
+	//deallocate
+	delete[] upper;
+	delete[] lower;
 
 	//Your code ends here
 	CompileObject(a_v3Color);
@@ -160,16 +201,40 @@ void MyPrimitive::GenerateTube(float a_fOuterRadius, float a_fInnerRadius, float
 	Init();
 
 	//Your code starts here
-	float fValue = 0.5f;
-	//3--2
-	//|  |
-	//0--1
-	vector3 point0(-fValue, -fValue, fValue); //0
-	vector3 point1(fValue, -fValue, fValue); //1
-	vector3 point2(fValue, fValue, fValue); //2
-	vector3 point3(-fValue, fValue, fValue); //3
+	vector3* upperOuter = new vector3[a_nSubdivisions];
+	vector3* upperInner = new vector3[a_nSubdivisions];
+	vector3* lowerOuter = new vector3[a_nSubdivisions];
+	vector3* lowerInner = new vector3[a_nSubdivisions];
 
-	AddQuad(point0, point1, point3, point2);
+	//setting upper and lower (inner/outer) points
+	for (int i = 0; i < a_nSubdivisions; i++) {
+		float angle = 360.0f / a_nSubdivisions * i;
+		angle = (angle / 360) * 2 * PI;
+		float x = cos(angle);
+		float z = sin(angle);
+		upperOuter[i] = vector3(x * a_fOuterRadius, a_fHeight / 2, z * a_fOuterRadius);
+		upperInner[i] = vector3(x * a_fInnerRadius, a_fHeight / 2, z * a_fInnerRadius);
+		lowerOuter[i] = vector3(x * a_fOuterRadius, -a_fHeight / 2, z * a_fOuterRadius);
+		lowerInner[i] = vector3(x * a_fInnerRadius, -a_fHeight / 2, z * a_fInnerRadius);
+	}
+
+	//add vertices to mesh
+	for (int k = 0; k < a_nSubdivisions; k++) {
+		//outside quads
+		AddQuad(upperOuter[k], upperOuter[(k + 1) % a_nSubdivisions], lowerOuter[k], lowerOuter[(k + 1) % a_nSubdivisions]);
+		//inner quads
+		AddQuad(lowerInner[k], lowerInner[(k + 1) % a_nSubdivisions], upperInner[k], upperInner[(k + 1) % a_nSubdivisions]);
+		//top quads
+		AddQuad(upperInner[k], upperInner[(k + 1) % a_nSubdivisions], upperOuter[k], upperOuter[(k + 1) % a_nSubdivisions]);
+		//bottom quads
+		AddQuad(lowerOuter[k], lowerOuter[(k + 1) % a_nSubdivisions], lowerInner[k], lowerInner[(k + 1) % a_nSubdivisions]);
+	}
+
+	//deallocate
+	delete[] upperOuter;
+	delete[] upperInner;
+	delete[] lowerOuter;
+	delete[] lowerInner;
 
 	//Your code ends here
 	CompileObject(a_v3Color);
@@ -220,18 +285,6 @@ void MyPrimitive::GenerateSphere(float a_fRadius, int a_nSubdivisions, vector3 a
 
 	Release();
 	Init();
-
-	//Your code starts here
-	float fValue = 0.5f;
-	//3--2
-	//|  |
-	//0--1
-	vector3 point0(-fValue, -fValue, fValue); //0
-	vector3 point1(fValue, -fValue, fValue); //1
-	vector3 point2(fValue, fValue, fValue); //2
-	vector3 point3(-fValue, fValue, fValue); //3
-
-	AddQuad(point0, point1, point3, point2);
 
 	//Your code ends here
 	CompileObject(a_v3Color);

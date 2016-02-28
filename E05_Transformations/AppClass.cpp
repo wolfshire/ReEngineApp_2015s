@@ -18,6 +18,11 @@ void AppClass::InitVariables(void)
 	m_pTorus = new PrimitiveClass();
 
 	//Initializing the primitives
+	m_pCube->GenerateCube(0.5f, RERED);
+	m_pCone->GenerateCone(0.5f, 0.5f, 10, REGREEN);
+	m_pCylinder->GenerateCylinder(0.5f, 0.5f, 10, REBLUE);
+	m_pTube->GenerateTube(0.5f, 0.25f, 0.5f, 10, REBROWN);
+	m_pTorus->GenerateTorus(0.5f, 0.25, 10, 10, REYELLOW);
 	m_pSphere->GenerateSphere(0.5f, 5, REWHITE);
 }
 
@@ -25,9 +30,19 @@ void AppClass::Update(void)
 {
 	//This matrices will just place the objects int the right spots
 	m_m4Sphere = glm::translate(IDENTITY_M4, vector3(2.5f, 2.5f, 0.0f));
+	m_m4Cube = glm::translate(IDENTITY_M4, vector3(2.0f, 0.0f, 0.0f));
+	m_m4Cone = glm::translate(IDENTITY_M4, vector3(0.0f, 2.0f, 0.0f));
+	m_m4Tube = glm::translate(IDENTITY_M4, vector3(0.0f, -2.0f, 0.0f));
+	m_m4Cylinder = glm::translate(IDENTITY_M4, vector3(-2.0f, 0.0f, 0.0f));
+	m_m4Torus = glm::translate(IDENTITY_M4, vector3(0.0f, 0.0f, 0.0f));
 
 	//This matrices will scale them to the right size
 	m_m4Sphere = glm::scale(m_m4Sphere, vector3(2.0f, 2.0f, 2.0f));
+	m_m4Cube = glm::scale(m_m4Cube, vector3(2.0f, 2.0f, 2.0f));
+	m_m4Cone = glm::scale(m_m4Cone, vector3(2.0f, 2.0f, 2.0f));
+	m_m4Tube = glm::scale(m_m4Tube, vector3(2.0f, 2.0f, 2.0f));
+	m_m4Cylinder = glm::scale(m_m4Cylinder, vector3(2.0f, 2.0f, 2.0f));
+	m_m4Torus = glm::scale(m_m4Torus, vector3(2.0f, 2.0f, 2.0f));
 
 	//Indicate the FPS
 	int nFPS = m_pSystem->GetFPS();
@@ -48,7 +63,12 @@ void AppClass::Display(void)
 	matrix4 m4View = m_pCameraMngr->GetViewMatrix();
 
 	//Renders the meshes using the specified position given by the matrix and in the specified color
+	m_pCube->Render(m4Projection, m4View, m_m4Cube);
 	m_pSphere->Render(m4Projection, m4View, m_m4Sphere);
+	m_pCone->Render(m4Projection, m4View, m_m4Cone);
+	m_pTorus->Render(m4Projection, m4View, m_m4Torus);
+	m_pTube->Render(m4Projection, m4View, m_m4Tube);
+	m_pCylinder->Render(m4Projection, m4View, m_m4Cylinder);
 
 	//To render the render list (right now it only contains the grid)
 	m_pMeshMngr->Render();
@@ -58,6 +78,10 @@ void AppClass::Display(void)
 
 void AppClass::Release(void)
 {
+	if (m_pCube) {
+		delete m_pCube;
+		m_pCube = nullptr;
+	}
 	SafeDelete(m_pCube);
 	SafeDelete(m_pCone);
 	SafeDelete(m_pCylinder);
