@@ -280,11 +280,60 @@ void MyPrimitive::GenerateSphere(float a_fRadius, int a_nSubdivisions, vector3 a
 		GenerateCube(a_fRadius * 2, a_v3Color);
 		return;
 	}
-	if (a_nSubdivisions > 6)
-		a_nSubdivisions = 6;
+	if (a_nSubdivisions > 12)
+		a_nSubdivisions = 12;
 
 	Release();
 	Init();
+
+	//Your code starts here
+	float* radii = new float[a_nSubdivisions];
+	vector3* current = new vector3[a_nSubdivisions];
+	vector3* next = new vector3[a_nSubdivisions];
+	vector3 top(0, a_fRadius, 0);
+	vector3 bottom(0, -a_fRadius, 0);
+	float segHeight = a_fRadius * 2 / (a_nSubdivisions - 1);
+
+	//set radiuses
+	for (int i = 0; i < a_nSubdivisions / 2; i++) {
+		//radii[i] = radii[a_nSubdivisions - i - 1] = i / (a_nSubdivisions / 2.0f);
+		radii[i] = radii[a_nSubdivisions - i - 1] = sqrt(pow(a_fRadius, 2) - pow(a_fRadius - (segHeight * i), 2));
+	}
+
+	if (a_nSubdivisions % 2 != 0) {
+		radii[a_nSubdivisions / 2] = a_fRadius;
+	}
+
+	//setting current and next points
+	for (int a = 0; a < a_nSubdivisions -2; a++) {
+		for (int j = 0; j < a_nSubdivisions; j++) {
+			float angle = 360.0f / a_nSubdivisions * j;
+			angle = (angle / 360) * 2 * PI;
+			float x = cos(angle);
+			float z = sin(angle);
+			current[j] = vector3(cos(angle) * radii[a], a_fRadius - (a * segHeight), sin(angle) * radii[a]);
+			next[j] = vector3(cos(angle) * radii[a+1], a_fRadius - ((a+1) * segHeight), sin(angle) * radii[a+1]);
+		}
+		for (int k = 0; k < a_nSubdivisions; k++) {
+			//add first quads
+			if (a == 1) {
+				AddQuad(top, top, next[k], next[(k + 1) % a_nSubdivisions]);
+			}
+			//add last quads
+			if (a == a_nSubdivisions - 3) {
+				AddQuad(next[k], next[(k + 1) % a_nSubdivisions], bottom, bottom);
+			}
+			//add current quads
+			AddQuad(current[k], current[(k + 1) % a_nSubdivisions], next[k], next[(k + 1) % a_nSubdivisions]);
+		}
+	}
+	
+
+
+	//debug
+	for (int k = 0; k < a_nSubdivisions; k++) {
+		std::cout << radii[k] << std::endl;
+	}
 
 	//Your code ends here
 	CompileObject(a_v3Color);
