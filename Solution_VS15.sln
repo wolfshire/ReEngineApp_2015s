@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "00_Sandbox", "00_Sandbox\00_Sandbox_VS15.vcxproj", "{F5D6D2E1-6FFD-402B-8EE3-DED4FE407028}"
 EndProject
@@ -26,6 +26,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "A05_Transformations", "A05_Transformations\A05_Transformations.vcxproj", "{AABA05C7-71CD-4C9B-A52F-78117CDBC72D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "A06_LERP", "A06_LERP\A06_LERP.vcxproj", "{8FB45351-2348-4127-9143-D866C86EE527}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "E06_Lerp_VS13", "E06_Lerp\E06_Lerp.vcxproj", "{0D690B4A-EEED-45DD-9651-D80BB36C0C76}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +83,10 @@ Global
 		{8FB45351-2348-4127-9143-D866C86EE527}.Debug|x86.Build.0 = Debug|Win32
 		{8FB45351-2348-4127-9143-D866C86EE527}.Release|x86.ActiveCfg = Release|Win32
 		{8FB45351-2348-4127-9143-D866C86EE527}.Release|x86.Build.0 = Release|Win32
+		{0D690B4A-EEED-45DD-9651-D80BB36C0C76}.Debug|x86.ActiveCfg = Debug|Win32
+		{0D690B4A-EEED-45DD-9651-D80BB36C0C76}.Debug|x86.Build.0 = Debug|Win32
+		{0D690B4A-EEED-45DD-9651-D80BB36C0C76}.Release|x86.ActiveCfg = Release|Win32
+		{0D690B4A-EEED-45DD-9651-D80BB36C0C76}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
