@@ -1,7 +1,7 @@
 #include "AppClass.h"
 void AppClass::InitWindow(String a_sWindowName)
 {
-	super::InitWindow("Sandbox"); // Window Name
+	super::InitWindow("LERP"); // Window Name
 
 	// Set the clear color based on Microsoft's CornflowerBlue (default in XNA)
 	//if this line is in Init Application it will depend on the .cfg file, if it
@@ -11,15 +11,13 @@ void AppClass::InitWindow(String a_sWindowName)
 
 void AppClass::InitVariables(void)
 {
-	//Reset the selection to -1, -1
-	m_selection = std::pair<int, int>(-1, -1);
-	//Set the camera position
-	m_pCameraMngr->SetPositionTargetAndView(
-		vector3(0.0f, 2.5f, 15.0f),//Camera position
-		vector3(0.0f, 2.5f, 0.0f),//What Im looking at
-		REAXISY);//What is up
+	m_v3Rotation = vector3(0.0f);
+
+	//Set the camera at a position other than the default
+	m_pCameraMngr->SetPositionTargetAndView(vector3(0.0f, 0.0f, 12.0f), vector3(0.0f, 0.0f, 0.0f), REAXISY);
+		
 	//Load a model onto the Mesh manager
-	m_pMeshMngr->LoadModel("Lego\\Unikitty.bto", "Unikitty");
+	m_pMeshMngr->LoadModel("Minecraft\\Steve.obj", "Steve");
 }
 
 void AppClass::Update(void)
@@ -36,9 +34,28 @@ void AppClass::Update(void)
 
 	//Call the arcball method
 	ArcBall();
-	
-	//Set the model matrix for the first model to be the arcball
-	m_pMeshMngr->SetModelMatrix(ToMatrix4(m_qArcBall), 0);
+
+	//Lets us know how much time has passed since the last call
+	double fTimeSpan = m_pSystem->LapClock();
+
+	//cumulative time
+	static double fRunTime = 0.0f;
+	fRunTime += fTimeSpan;
+
+	matrix4 mOrientation = glm::rotate(IDENTITY_M4, m_v3Rotation.x, vector3(1.0f, 0.0f, 0.0f));
+	mOrientation = mOrientation * glm::rotate(IDENTITY_M4, m_v3Rotation.y, vector3(0.0f, 1.0f, 0.0f));
+	mOrientation = mOrientation * glm::rotate(IDENTITY_M4, m_v3Rotation.z, vector3(0.0f, 0.0f, 1.0f));
+
+	vector3 v3Start(0.0f, 0.0f, 0.0f);
+	vector3 v3End(0.0f, 90.0f, 0.0f);
+	static float fDifference = 0.0f;
+	fDifference += 0.1f;
+	fDifference = MapValue(static_cast<float>(fRunTime), 0.0f, 10.0f, 0.0f, 1.0f);
+
+	float fPosition = glm::lerp(v3Start, v3End, fDifference).y;
+	//mOrientation = glm::rotate(IDENTITY_M4, fPosition, vector3(0.0f, 1.0f, 0.0f));
+
+	m_pMeshMngr->SetModelMatrix(m_m4Orientation, "Steve");
 	
 	//Adds all loaded instance to the render list
 	m_pMeshMngr->AddInstanceToRenderList("ALL");
@@ -50,9 +67,6 @@ void AppClass::Update(void)
 	//Print info on the screen
 	m_pMeshMngr->PrintLine(m_pSystem->GetAppName(), REYELLOW);
 
-	m_pMeshMngr->Print("Selection: ");
-	m_pMeshMngr->PrintLine(m_pMeshMngr->GetInstanceGroupName(m_selection.first, m_selection.second), REYELLOW);
-	
 	m_pMeshMngr->Print("FPS:");
 	m_pMeshMngr->Print(std::to_string(nFPS), RERED);
 }

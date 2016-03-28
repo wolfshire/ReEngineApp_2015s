@@ -43,6 +43,46 @@ void AppClass::ProcessKeyboard(void)
 		m_pCameraMngr->MoveVertical(fSpeed);
 #pragma endregion
 
+#pragma region Model Positioning
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::X))
+	{
+		if (!bModifier) {
+			m_v3Rotation += REAXISX;
+			m_m4Orientation *= glm::rotate(IDENTITY_M4, 1.0f, REAXISX);
+		}
+		else {
+			m_v3Rotation -= REAXISX;
+			m_m4Orientation *= glm::rotate(IDENTITY_M4, -1.0f, REAXISX);
+		}
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y))
+	{
+		if (!bModifier) {
+			m_v3Rotation += REAXISY;
+			m_m4Orientation *= glm::rotate(IDENTITY_M4, 1.0f, REAXISY);
+		}
+		else {
+			m_v3Rotation -= REAXISY;
+			m_m4Orientation *= glm::rotate(IDENTITY_M4, -1.0f, REAXISY);
+		}
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+	{
+		if (!bModifier) {
+			m_v3Rotation += REAXISZ;
+			m_m4Orientation *= glm::rotate(IDENTITY_M4, 1.0f, REAXISZ);
+		}
+		else {
+			m_v3Rotation -= REAXISZ;
+			m_m4Orientation *= glm::rotate(IDENTITY_M4, -1.0f, REAXISZ);
+		}
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+	{
+		m_m4Orientation = IDENTITY_M4;
+	}
+#pragma endregion
+
 #pragma region Other Actions
 	ON_KEY_PRESS_RELEASE(Escape, NULL, PostMessage(m_pWindow->GetHandler(), WM_QUIT, NULL, NULL));
 	ON_KEY_PRESS_RELEASE(F1, NULL, m_pCameraMngr->SetCameraMode(CAMPERSP));
